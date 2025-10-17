@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: Minimal Flask Todo API
+  description: Simple API for managing todo items in memory
+  version: 1.0.0
+  contact:
+    name: GCP Midterm Project
+  license:
+    name: MIT
+
+servers:
+  - url: https://your-project.appspot.com
+    description: App Engine production environment
+  - url: http://localhost:8080
+    description: Local development environment
+
+paths:
+  /:
+    get:
+      summary: Get homepage
+      description: Returns simple HTML homepage
+      operationId: getHomepage
+      responses:
+        '200':
+          description: HTML homepage
+          content:
+            text/html:
+              schema:
+                type: string
+              example: "<html><body><h1>Hello, GCP</h1></body></html>"
+
+  /api/todos:
+    get:
+      summary: Get all todo items
+      description: Returns the complete list of todo items
+      operationId: getTodos
+      responses:
+        '200':
+          description: List of todo items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TodoItem'
+              example:
+                - id: 1
+                  text: "Buy milk"
+                  created_at: "2025-10-15T10:30:00Z"
+                - id: 2
+                  text: "Walk the dog"
+                  created_at: "2025-10-15T11:00:00Z"
+
+    post:
+      summary: Add a new todo item
+      description: Creates a new todo item and returns the current count
+      operationId: createTodo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoRequest'
+            example:
+              text: "Buy groceries"
+      responses:
+        '201':
+          description: Todo item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTodoResponse'
+              example:
+                count: 3
+        '400':
+          description: Bad request - invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                missing_text:
+                  summary: Missing text field
+                  value:
+                    error: "text field is required"
+                empty_text:
+                  summary: Empty text field
+                  value:
+                    error: "text cannot be empty"
+                text_too_long:
+                  summary: Text exceeds maximum length
+                  value:
+                    error: "text maximum 255 characters"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    TodoItem:
+      type: object
+      required:
+        - id
+        - text
+        - created_at
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the todo item
+          example: 1
+          minimum: 1
+        text:
+          type: string
+          description: The todo item description
+          example: "Buy milk"
+          minLength: 1
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          description: When the todo item was created
+          example: "2025-10-15T10:30:00Z"
+
+    CreateTodoRequest:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          description: The todo item description
+          minLength: 1
+          maxLength: 255
+          example: "Buy groceries"
+
+    CreateTodoResponse:
+      type: object
+      required:
+        - count
+      properties:
+        count:
+          type: integer
+          description: Total number of todo items after creation
+          example: 3
+          minimum: 1
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message describing what went wrong
+          example: "text field is required"
+
+  securitySchemes:
+    # No authentication required for this minimal API
+    # All endpoints are publicly accessible
+
+security:
+  # No security requirements - all endpoints are public
+
+tags:
+  - name: Homepage
+    description: Static HTML page
+  - name: Todos
+    description: Todo item management

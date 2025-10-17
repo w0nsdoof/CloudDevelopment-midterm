@@ -31,7 +31,11 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- **Absolute Simplicity**: Is this the simplest possible implementation that satisfies assignment requirements?
+- **MVP-First**: Can each GCP service be deployed and tested independently?
+- **Windows/PowerShell**: Do all commands work in PowerShell environment?
+- **Assignment-Checkbox**: Does this directly map to a specific requirement from requirements.md?
+- **Fast-Fail Ready**: Is there a clear skip-and-document plan if complexity arises?
 
 ## Project Structure
 

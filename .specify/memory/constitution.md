@@ -1,50 +1,62 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!-- Sync Impact Report:
+Version change: 0.0.0 → 1.0.0 (initial adoption)
+Modified principles: None (new constitution)
+Added sections: All sections newly created based on project requirements
+Removed sections: None (initial constitution)
+Templates requiring updates:
+- ✅ plan-template.md (Constitution Check section updated)
+- ✅ spec-template.md (already aligned with minimal requirements)
+- ✅ tasks-template.md (already aligned with MVP-first approach)
+Follow-up TODOs: None
+-->
+
+# GCP Midterm Minimal App Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Absolute Simplicity (NON-NEGOTIABLE)
+Every implementation choice must favor the absolute simplest working solution that satisfies assignment checkboxes. No databases, no auth, no fancy features unless explicitly required by the assignment. Single region, single replica, default configurations whenever possible.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. MVP-First Delivery
+Each GCP service deployment (App Engine, Cloud Functions, GKE, Endpoints) must be independently testable and provide immediate value. If a service integration becomes complex, skip it and document the reason clearly in README under "Skips (Intentional)".
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Windows/PowerShell Native
+All commands and scripts must work in Windows PowerShell environment. No bash-only solutions. Use gcloud CLI defaults and avoid complex shell scripting.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Assignment-Checkbox Driven
+Every deliverable must map directly to a specific requirement from requirements.md. README must contain explicit mapping table: "Assignment Requirement → Proof of Completion OR Skip Explanation".
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Fast-Fail Policy
+If any step takes more than 15 minutes or requires complex debugging, immediately skip and document. The goal is working demos, not perfect implementations. All skips must be documented with clear "how to complete later" instructions.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technical Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**Technology Stack**: Python 3.11 + Flask mandatory. No alternative languages or frameworks allowed.
+**Infrastructure**: GCP services only. No AWS, Azure, or hybrid solutions.
+**Runtime Target**: Public demo only. No PII, no authentication, no production security considerations.
+**Operational**: Basic GCP console monitoring only. No custom dashboards, no SLOs, no alerting.
+**Regional**: Single region deployment using gcloud defaults.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Development Workflow
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Skip Documentation**: Every skipped step must be documented in README.md under "Skips (Intentional)" section with:
+- What was skipped
+- Why it was skipped (complexity/time constraint)
+- How to complete it later (clear instructions)
+
+**Proof of Completion**: For each GCP service, provide:
+- Public URL where service is reachable
+- Screenshot or curl command showing 200 OK response
+- Brief description of what the service demonstrates
+
+**Code Quality**: Minimal but functional. Basic error handling OK. No comprehensive testing required beyond basic unit tests.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all technical discussions and implementation decisions. All development choices must be justified against these principles. When in doubt, choose the simpler option and document the skip.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Amendment Process**: Changes require updating this constitution file and incrementing version number. All dependent templates must be reviewed for alignment.
+
+**Compliance**: Before any deployment, verify against the assignment requirements mapping in README. If a deployment doesn't directly support a checkbox, reconsider or skip it.
+
+**Version**: 1.0.0 | **Ratified**: 2025-10-15 | **Last Amended**: 2025-10-15

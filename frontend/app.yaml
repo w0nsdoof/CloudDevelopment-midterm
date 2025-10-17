@@ -1,0 +1,24 @@
+runtime: python311
+service: frontend  # Deploy as separate service
+
+# Use Python runtime to serve static files
+handlers:
+  - url: /
+    static_files: index.html
+    upload: index.html
+
+  - url: /(.*\.(html|css|js|ico|png|jpg|jpeg|gif|svg))
+    static_files: \1
+    upload: (.*\.(html|css|js|ico|png|jpg|jpeg|gif|svg))
+
+  - url: /.*
+    static_files: index.html
+    upload: index.html
+
+# Instance configuration
+instance_class: F1
+automatic_scaling:
+  min_instances: 0
+  max_instances: 2
+
+# Note: HTTPS is automatically handled by App Engine

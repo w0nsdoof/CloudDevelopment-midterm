@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Todo List</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">📝 GCP Todo List</h1>
+            <p class="subtitle">Powered by Flask + Google Cloud Platform</p>
+            <div class="backend-info">
+                <span class="backend-status" id="backendStatus">🔌 Checking backend...</span>
+                <span class="user-id" id="userInfo">👤 User: Generating ID...</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="todo-form">
+                <h2>Add New Todo</h2>
+                <form id="todoForm" class="form">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            id="todoInput"
+                            placeholder="What needs to be done?"
+                            maxlength="255"
+                            required
+                            class="todo-input"
+                        >
+                        <button type="submit" class="btn-primary" id="addBtn">
+                            <span class="btn-text">Add Todo</span>
+                            <span class="btn-spinner" style="display: none;">⏳</span>
+                        </button>
+                    </div>
+                    <div class="input-help">
+                        <span id="charCount">0</span>/255 characters
+                    </div>
+                </form>
+            </section>
+
+            <section class="todo-list">
+                <div class="list-header">
+                    <h2>Your Todos</h2>
+                    <div class="list-actions">
+                        <button id="refreshBtn" class="btn-secondary">🔄 Refresh</button>
+                        <span class="todo-count" id="todoCount">0 todos</span>
+                    </div>
+                </div>
+
+                <div id="todoContainer" class="todo-container">
+                    <div class="loading-state" id="loadingState">
+                        <div class="spinner">⏳ Loading todos...</div>
+                    </div>
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <div class="empty-icon">📋</div>
+                        <p>No todos yet! Add your first todo above.</p>
+                    </div>
+                    <div class="error-state" id="errorState" style="display: none;">
+                        <div class="error-icon">❌</div>
+                        <p>Failed to load todos. <button id="retryBtn" class="retry-link">Try again</button></p>
+                    </div>
+                    <ul id="todoList" class="todo-items" style="display: none;"></ul>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>🚀 Deployed on Google Cloud Platform</p>
+                <div class="api-info">
+                    <small>Backend: <span id="apiUrl">Loading...</span></small>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
