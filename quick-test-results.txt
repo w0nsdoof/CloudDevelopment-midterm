@@ -1,0 +1,23 @@
+Assignment 4 - Quick Test
+========================================
+1. Testing Python...
+   Python is working: Python 3.11.4
+
+2. Testing security scan...
+   Security scanner works!
+   WARNING: Issues found (see full output)
+
+3. Testing app connectivity...
+   App is accessible!
+
+4. Testing app security...
+   Security tests PASS!
+
+========================================
+Quick test completed!
+
+To see full security scan output:
+   python security-scan-simple.py
+
+To see full security test output:
+   python test-app-security.py https://kbtu-ldoc.uc.r.appspot.com

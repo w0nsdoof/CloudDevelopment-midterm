@@ -1,0 +1,31 @@
+runtime: python311
+entrypoint: gunicorn -b :$PORT secure_main:app
+instance_class: F1
+service: secure
+
+# Use our dedicated service account
+service_account: flask-secure-sa@gcp-as3-assignment.iam.gserviceaccount.com
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 2
+  target_cpu_utilization: 0.75
+
+resources:
+  cpu: 1
+  memory_gb: 1
+
+# Environment variables for security
+env_variables:
+  GOOGLE_CLOUD_PROJECT: "gcp-as3-assignment"
+  FLASK_DEBUG: "false"  # Disable debug mode in production
+  # Note: KMS variables would be set if KMS was available
+
+# Health checks
+health_check:
+  enable_health_check: True
+  check_interval_sec: 30
+  timeout_sec: 4
+
+readiness_check:
+  app_start_timeout_sec: 300

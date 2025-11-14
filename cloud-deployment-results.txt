@@ -1,0 +1,10 @@
+Running cloud deployment smoke tests...
+[PASS] Homepage test passed: 200
+[PASS] API status test passed: {'features': ['user_separation', 'cors_support', 'client_id'], 'global_todos_count': 5, 'status': 'operational', 'users_count': 0, 'version': '2.0'}
+[PASS] Todo API workflow test passed: Created Assignment 4 test todo 1763115642
+[PASS] CORS test passed: 200
+[PASS] Performance test passed: 393.96ms
+[PASS] Error handling test passed
+
+[SUCCESS] All cloud deployment tests passed!
+Application is running successfully at: https://kbtu-ldoc.uc.r.appspot.com

@@ -1,0 +1,29 @@
+Flask Todo App Security Scanner
+========================================
+[SCANNING] Running security scan on app/main.py...
+
+[ANALYSIS] Security Issues Summary:
+   High: 1
+   Medium: 1
+   Low: 0
+
+[CRITICAL] High Severity Issues:
+   - flask_debug_true: A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.
+     Location: .\app/main.py:111
+
+[WARNING] Medium Severity Issues (first 3):
+   - hardcoded_bind_all_interfaces: Possible binding to all interfaces.
+[SCANNING] Running security scan on app/secure_main.py...
+
+[ANALYSIS] Security Issues Summary:
+   High: 0
+   Medium: 1
+   Low: 0
+
+[WARNING] Medium Severity Issues (first 3):
+   - hardcoded_bind_all_interfaces: Possible binding to all interfaces.
+[SCANNING] Running security scan on cloud-function/main.py...
+[PASS] No high-severity security issues found
+
+[SUMMARY] Final Assessment:
+[CRITICAL] 1 high-severity issues found - Fix before production!

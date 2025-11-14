@@ -1,2 +1,7 @@
 flask==3.0.0
 gunicorn==21.2.0
+google-cloud-kms==2.20.1
+google-cloud-logging==3.8.0
+google-cloud-monitoring==2.21.1
+cryptography==41.0.8
+bandit==1.7.6

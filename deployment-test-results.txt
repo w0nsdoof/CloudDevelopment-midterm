@@ -1,0 +1,1 @@
+C:\Users\Askar\AppData\Local\Programs\Python\Python311\python.exe: can't open file 'C:\\Coding\\Uni\\cloud-dev\\gcp-midterm\\test-cloud_deployment.py': [Errno 2] No such file or directory
