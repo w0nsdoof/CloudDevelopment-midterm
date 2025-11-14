@@ -50,7 +50,7 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: security-reports
         path: |
@@ -86,7 +86,7 @@ jobs:
           --out reports/ || true
 
     - name: Upload dependency check reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dependency-check-reports
         path: app/reports/
@@ -119,7 +119,7 @@ jobs:
         semgrep --config=auto app/
 
     - name: Upload static analysis reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: static-analysis-reports
         path: |
