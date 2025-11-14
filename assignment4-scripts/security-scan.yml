@@ -1,0 +1,186 @@
+name: Security Scan and CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        cd app
+        pip install -r requirements.txt
+        pip install safety bandit snyk
+
+    - name: Run Safety vulnerability scan
+      run: |
+        cd app
+        safety check --json --output safety-report.json || true
+        safety check
+
+    - name: Run Bandit security linter
+      run: |
+        cd app
+        bandit -r . -f json -o bandit-report.json || true
+        bandit -r .
+
+    - name: Run Snyk security scan
+      run: |
+        cd app
+        snyk test --json > snyk-report.json || true
+        snyk test || true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          app/safety-report.json
+          app/bandit-report.json
+          app/snyk-report.json
+
+  dependency-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install OWASP Dependency Check
+      run: |
+        wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.9/dependency-check-9.0.9-release.zip
+        unzip dependency-check-9.0.9-release.zip
+
+    - name: Run OWASP Dependency Check
+      run: |
+        cd app
+        ../dependency-check/bin/dependency-check.sh \
+          --project "Flask Todo App" \
+          --scan . \
+          --format JSON \
+          --format HTML \
+          --out reports/ || true
+
+    - name: Upload dependency check reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-check-reports
+        path: app/reports/
+
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install analysis tools
+      run: |
+        pip install pylint semgrep
+
+    - name: Run Pylint analysis
+      run: |
+        cd app
+        pylint --output-format=json main.py > pylint-report.json || true
+        pylint main.py || true
+
+    - name: Run Semgrep security scan
+      run: |
+        semgrep --config=auto --json --output=semgrep-report.json app/ || true
+        semgrep --config=auto app/
+
+    - name: Upload static analysis reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: static-analysis-reports
+        path: |
+          app/pylint-report.json
+          semgrep-report.json
+
+  deploy-staging:
+    needs: [security-scan, dependency-check, static-analysis]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v1
+
+    - name: Deploy to App Engine (Staging)
+      run: |
+        cd app
+        gcloud app deploy --project=$PROJECT_ID --version=staging --no-promote
+
+    - name: Run smoke tests
+      run: |
+        pip install requests pytest
+        pytest tests/test_smoke.py -v
+
+  deploy-production:
+    needs: [security-scan, dependency-check, static-analysis]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v1
+
+    - name: Deploy to App Engine (Production)
+      run: |
+        cd app
+        gcloud app deploy --project=$PROJECT_ID --version=production --promote
+
+    - name: Run production smoke tests
+      run: |
+        pip install requests pytest
+        pytest tests/test_smoke.py -v
+
+    - name: Notify security team of deployment
+      run: |
+        echo "Production deployment completed at $(date)" > deployment-notification.txt
+        echo "Security reports available in GitHub Actions artifacts" >> deployment-notification.txt
